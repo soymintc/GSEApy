@@ -690,10 +690,13 @@ class DotPlot(object):
                 raise ValueError(
                     f"Can not detetermine colormap. All values in {self.colname} are 0s"
                 )
-            df = df.sort_values(by=self.colname)
+            #df = df.sort_values(by=self.colname) # omit sorting for custom y tick labels
             df[self.colname].replace(
                 0, method="bfill", inplace=True
             )  ## asending order, use bfill
+            df[self.colname].replace(
+                0, method="ffill", inplace=True
+            )  ## descending order, use ffill
             df = df.assign(p_inv=np.log10(1 / df[self.colname].astype(float)))
             _t = colnd[self.colname]
             self.colname = "p_inv"
